@@ -2,6 +2,10 @@ import { db as prisma } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { NextRequest, NextResponse } from 'next/server';
 
+// Prevent Next.js from trying to statically prerender this route at build time
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request: NextRequest) {
   try {
     const { fullName, email, password } = await request.json();
