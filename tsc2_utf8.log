@@ -1,0 +1,95 @@
+﻿.next/dev/types/validator.ts(477,31): error TS2344: Type 'typeof import("C:/Users/svish/Downloads/b_bsvEJOX29qE-1774034138999/app/api/expenses/[id]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/expenses/[id]">'.
+  Types of property 'DELETE' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ details?: {} | undefined; success: boolean; error: string; }> | NextResponse<{ message?: string | undefined; success: boolean; data: null; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/dev/types/validator.ts(495,31): error TS2344: Type 'typeof import("C:/Users/svish/Downloads/b_bsvEJOX29qE-1774034138999/app/api/invoices/[id]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/invoices/[id]">'.
+  Types of property 'DELETE' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ details?: {} | undefined; success: boolean; error: string; }> | NextResponse<{ message?: string | undefined; success: boolean; data: null; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/dev/types/validator.ts(531,31): error TS2344: Type 'typeof import("C:/Users/svish/Downloads/b_bsvEJOX29qE-1774034138999/app/api/payments/[id]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/payments/[id]">'.
+  Types of property 'DELETE' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ details?: {} | undefined; success: boolean; error: string; }> | NextResponse<{ message?: string | undefined; success: boolean; data: null; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/types/validator.ts(468,31): error TS2344: Type 'typeof import("C:/Users/svish/Downloads/b_bsvEJOX29qE-1774034138999/app/api/expenses/[id]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/expenses/[id]">'.
+  Types of property 'DELETE' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ details?: {} | undefined; success: boolean; error: string; }> | NextResponse<{ message?: string | undefined; success: boolean; data: null; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/types/validator.ts(486,31): error TS2344: Type 'typeof import("C:/Users/svish/Downloads/b_bsvEJOX29qE-1774034138999/app/api/invoices/[id]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/invoices/[id]">'.
+  Types of property 'DELETE' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ details?: {} | undefined; success: boolean; error: string; }> | NextResponse<{ message?: string | undefined; success: boolean; data: null; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/types/validator.ts(513,31): error TS2344: Type 'typeof import("C:/Users/svish/Downloads/b_bsvEJOX29qE-1774034138999/app/api/payments/[id]/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/payments/[id]">'.
+  Types of property 'DELETE' are incompatible.
+    Type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ details?: {} | undefined; success: boolean; error: string; }> | NextResponse<{ message?: string | undefined; success: boolean; data: null; }>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+app/(dashboard)/reports/page.tsx(16,53): error TS17001: JSX elements cannot have multiple attributes with the same name.
+app/api/expenses/[id]/route.ts(26,9): error TS2353: Object literal may only specify known properties, and 'workspace' does not exist in type 'ExpenseWhereInput'.
+app/api/expenses/route.ts(19,37): error TS2339: Property 'workspaceMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/api/expenses/route.ts(24,42): error TS7006: Parameter 'w' implicitly has an 'any' type.
+app/api/expenses/route.ts(32,9): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'ExpenseWhereInput'.
+app/api/expenses/route.ts(39,19): error TS2551: Property 'category' does not exist on type '{ id: string; companyId: string; createdAt: Date; updatedAt: Date; amount: number; date: Date; description: string; categoryId: string; receiptUrl: string | null; }'. Did you mean 'categoryId'?
+app/api/expenses/route.ts(41,19): error TS2339: Property 'currency' does not exist on type '{ id: string; companyId: string; createdAt: Date; updatedAt: Date; amount: number; date: Date; description: string; categoryId: string; receiptUrl: string | null; }'.
+app/api/expenses/route.ts(44,19): error TS2339: Property 'merchant' does not exist on type '{ id: string; companyId: string; createdAt: Date; updatedAt: Date; amount: number; date: Date; description: string; categoryId: string; receiptUrl: string | null; }'.
+app/api/expenses/route.ts(45,17): error TS2339: Property 'status' does not exist on type '{ id: string; companyId: string; createdAt: Date; updatedAt: Date; amount: number; date: Date; description: string; categoryId: string; receiptUrl: string | null; }'.
+app/api/expenses/route.ts(81,36): error TS2339: Property 'workspaceMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/api/expenses/route.ts(96,9): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type '(Without<ExpenseCreateInput, ExpenseUncheckedCreateInput> & ExpenseUncheckedCreateInput) | (Without<...> & ExpenseCreateInput)'.
+app/api/invoices/[id]/route.ts(26,9): error TS2353: Object literal may only specify known properties, and 'workspace' does not exist in type 'InvoiceWhereInput'.
+app/api/invoices/route.ts(19,37): error TS2339: Property 'workspaceMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/api/invoices/route.ts(24,42): error TS7006: Parameter 'w' implicitly has an 'any' type.
+app/api/invoices/route.ts(32,9): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'InvoiceWhereInput'.
+app/api/invoices/route.ts(36,21): error TS2353: Object literal may only specify known properties, and 'name' does not exist in type 'CustomerSelect<DefaultArgs>'.
+app/api/invoices/route.ts(45,25): error TS2551: Property 'customer' does not exist on type '{ status: string; id: string; companyId: string; notes: string | null; createdAt: Date; updatedAt: Date; customerId: string; invoiceNumber: string; issueDate: Date; dueDate: Date; ... 4 more ...; paidAt: Date | null; }'. Did you mean 'customerId'?
+app/api/invoices/route.ts(85,36): error TS2339: Property 'workspaceMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/api/invoices/route.ts(114,11): error TS2322: Type '{ total: number; name: string; quantity: number; unitPrice: number; tax?: number | undefined; description?: string | undefined; }[]' is not assignable to type '(Without<InvoiceItemCreateWithoutInvoiceInput, InvoiceItemUncheckedCreateWithoutInvoiceInput> & InvoiceItemUncheckedCreateWithoutInvoiceInput) | (Without<...> & InvoiceItemCreateWithoutInvoiceInput) | InvoiceItemCreateWithoutInvoiceInput[] | InvoiceItemUncheckedCreateWithoutInvoiceInput[] | undefined'.
+  Type '{ total: number; name: string; quantity: number; unitPrice: number; tax?: number | undefined; description?: string | undefined; }[]' is not assignable to type 'InvoiceItemCreateWithoutInvoiceInput[]'.
+    Type '{ total: number; name: string; quantity: number; unitPrice: number; tax?: number | undefined; description?: string | undefined; }' is not assignable to type 'InvoiceItemCreateWithoutInvoiceInput'.
+      Types of property 'description' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string'.
+          Type 'undefined' is not assignable to type 'string'.
+app/api/invoices/route.ts(123,21): error TS2353: Object literal may only specify known properties, and 'name' does not exist in type 'CustomerSelect<DefaultArgs>'.
+app/api/payments/[id]/route.ts(26,9): error TS2353: Object literal may only specify known properties, and 'workspace' does not exist in type 'PaymentWhereInput'.
+app/api/payments/route.ts(19,37): error TS2339: Property 'workspaceMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/api/payments/route.ts(24,42): error TS7006: Parameter 'w' implicitly has an 'any' type.
+app/api/payments/route.ts(32,9): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'PaymentWhereInput'.
+app/api/payments/route.ts(44,24): error TS2551: Property 'invoice' does not exist on type '{ status: string; id: string; companyId: string; notes: string | null; createdAt: Date; updatedAt: Date; customerId: string; amount: number; invoiceId: string; method: string; transactionId: string | null; date: Date; }'. Did you mean 'invoiceId'?
+app/api/payments/route.ts(48,23): error TS2339: Property 'receivedDate' does not exist on type '{ status: string; id: string; companyId: string; notes: string | null; createdAt: Date; updatedAt: Date; customerId: string; amount: number; invoiceId: string; method: string; transactionId: string | null; date: Date; }'.
+app/api/payments/route.ts(49,20): error TS2339: Property 'reference' does not exist on type '{ status: string; id: string; companyId: string; notes: string | null; createdAt: Date; updatedAt: Date; customerId: string; amount: number; invoiceId: string; method: string; transactionId: string | null; date: Date; }'.
+app/api/payments/route.ts(85,36): error TS2339: Property 'workspaceMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/api/payments/route.ts(101,9): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'InvoiceWhereInput'.
+app/api/payments/route.ts(115,9): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'Without<PaymentCreateInput, PaymentUncheckedCreateInput> & PaymentUncheckedCreateInput'.
+app/api/reports/route.ts(18,37): error TS2339: Property 'workspaceMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/api/reports/route.ts(23,42): error TS7006: Parameter 'w' implicitly has an 'any' type.
+app/api/reports/route.ts(41,9): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'PaymentWhereInput'.
+app/api/reports/route.ts(66,7): error TS2322: Type '"category"[]' is not assignable to type 'ExpenseScalarFieldEnum | ExpenseScalarFieldEnum[]'.
+  Type '"category"[]' is not assignable to type 'ExpenseScalarFieldEnum[]'.
+    Type '"category"' is not assignable to type 'ExpenseScalarFieldEnum'. Did you mean '"categoryId"'?
+app/api/reports/route.ts(68,9): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'ExpenseWhereInput'.
+app/api/reports/route.ts(75,19): error TS2551: Property 'category' does not exist on type 'PickEnumerable<ExpenseGroupByOutputType, ExpenseScalarFieldEnum | ExpenseScalarFieldEnum[]> & { ...; }'. Did you mean 'categoryId'?
+app/api/reports/route.ts(76,15): error TS18048: 'e._sum' is possibly 'undefined'.
+app/api/reports/route.ts(82,16): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'InvoiceWhereInput'.
+lib/db-queries.ts(36,7): error TS2353: Object literal may only specify known properties, and 'members' does not exist in type 'WorkspaceWhereInput'.
+lib/db-queries.ts(41,7): error TS2353: Object literal may only specify known properties, and 'company' does not exist in type 'WorkspaceInclude<DefaultArgs>'.
+lib/db-queries.ts(52,16): error TS2353: Object literal may only specify known properties, and 'company' does not exist in type 'WorkspaceInclude<DefaultArgs>'.
+lib/db-queries.ts(67,14): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'CustomerWhereInput'.
+lib/db-queries.ts(82,14): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'InvoiceWhereInput'.
+lib/db-queries.ts(98,14): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'PaymentWhereInput'.
+lib/db-queries.ts(107,14): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'ExpenseWhereInput'.
+lib/db-queries.ts(115,14): error TS2353: Object literal may only specify known properties, and 'workspaceId' does not exist in type 'ReportWhereInput'.

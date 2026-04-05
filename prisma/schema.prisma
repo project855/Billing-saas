@@ -1,0 +1,718 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Auth Models
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  password      String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  workspaces    Workspace[]
+  sessions      Session[]
+  accounts      Account[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  sessionToken String @unique
+  userId    String
+  expires   DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Workspace Models
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  ownerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  companies Company[]
+}
+
+model Company {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  name          String
+  email         String?
+  phone         String?
+  logo          String?  @db.Text
+  address       String?
+  city          String?
+  state         String?
+  postalCode    String?
+  country       String?
+  taxId         String?
+  currency      String   @default("USD")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace          Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  customers          Customer[]
+  invoices           Invoice[]
+  payments           Payment[]
+  expenses           Expense[]
+  paymentMethods     PaymentMethod[]
+  expenseCategories  ExpenseCategory[]
+  settings           GeneralSettings?
+  taxSettings        TaxSettings?
+  emailSettings      EmailSettings?
+  invoiceSettings    InvoiceSettings?
+  quoteSettings      QuoteSettings?
+  companyPlan        CompanySubscription?
+  items              Item[]
+  coupons            Coupon[]
+  salespersons       Salesperson[]
+  subscriptions      Subscription[]
+  challans           DeliveryChallan[]
+  creditNotes        CreditNote[]
+  quotes             Quote[]
+  events             Event[]
+}
+
+// Customer Models
+model Customer {
+  id            String   @id @default(cuid())
+  companyId     String
+  displayName   String
+  companyName   String?
+  email         String
+  phone         String?
+  gstNumber     String?
+  panNumber     String?
+  currency      String   @default("INR")
+  paymentTerms  String   @default("Net 30")
+  billingAddress String?
+  shippingAddress String?
+  notes         String?
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoices      Invoice[]
+  payments      Payment[]
+  contacts      CustomerContact[]
+  subscriptions Subscription[]
+  challans      DeliveryChallan[]
+  creditNotes   CreditNote[]
+  quotes        Quote[]
+
+  @@index([companyId])
+}
+
+model CustomerContact {
+  id         String   @id @default(cuid())
+  customerId String
+  name       String
+  email      String?
+  phone      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+// Invoice Models
+model Invoice {
+  id              String   @id @default(cuid())
+  companyId       String
+  customerId      String
+  invoiceNumber   String
+  status          String   @default("Draft") // Draft, Sent, Paid, Overdue, Cancelled
+  issueDate       DateTime
+  dueDate         DateTime
+  amount          Float
+  tax             Float    @default(0)
+  discount        Float    @default(0)
+  notes           String?
+  sentAt          DateTime?
+  paidAt          DateTime?
+  type            String   @default("Standard Invoice")
+  template        String   @default("Professional")
+  metadata        String?  @db.Text
+  customFields    String?  @db.Text
+  salespersonId   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  company Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  salesperson Salesperson? @relation(fields: [salespersonId], references: [id], onDelete: SetNull)
+  items    InvoiceItem[]
+  payments Payment[]
+
+  @@unique([companyId, invoiceNumber])
+  @@index([companyId])
+  @@index([customerId])
+  @@index([salespersonId])
+  @@index([status])
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  itemId      String?
+  description String
+  quantity    Float
+  unitPrice   Float
+  tax         Float    @default(0)
+  total       Float
+  createdAt   DateTime @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  item    Item?   @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@index([invoiceId])
+  @@index([itemId])
+}
+
+
+model InvoiceTemplate {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  items     String   @db.Text // JSON string for template items
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Payment Models
+model Payment {
+  id            String   @id @default(cuid())
+  companyId     String
+  invoiceId     String
+  customerId    String
+  amount        Float
+  method        String   // Card, Bank, Cash, Check, Other
+  status        String   @default("Pending") // Pending, Completed, Failed, Refunded
+  transactionId String?
+  date          DateTime
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  company  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoice  Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([invoiceId])
+  @@index([customerId])
+  @@index([status])
+}
+
+model PaymentMethod {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  type      String   // Card, Bank Transfer, Cash, Check, Other
+  details   String?  // JSON string for payment details
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+}
+
+model PaymentSchedule {
+  id              String   @id @default(cuid())
+  invoiceId       String
+  frequency       String   // Daily, Weekly, Monthly, Quarterly, Yearly
+  nextPaymentDate DateTime
+  endDate         DateTime?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Expense Models
+model Expense {
+  id           String   @id @default(cuid())
+  companyId    String
+  categoryId   String
+  amount       Float
+  description  String
+  receiptUrl   String?
+  date         DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  category ExpenseCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([companyId])
+  @@index([categoryId])
+  @@index([date])
+}
+
+model ExpenseCategory {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  color     String   @default("#000000")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  expenses Expense[]
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+model Receipt {
+  id        String   @id @default(cuid())
+  expenseId String
+  fileUrl   String
+  fileName  String
+  size      Int
+  createdAt DateTime @default(now())
+}
+
+// Report Models
+model Report {
+  id           String   @id @default(cuid())
+  companyId    String
+  type         String   // Sales, Expense, Tax, Profitability, Custom
+  name         String
+  filters      String?  @db.Text // JSON string for filters
+  config       String?  @db.Text // JSON string for report config
+  generatedAt  DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([type])
+}
+
+// Settings Models
+model GeneralSettings {
+  id           String   @id @default(cuid())
+  companyId    String   @unique
+  language     String   @default("en")
+  timezone     String   @default("UTC")
+  dateFormat   String   @default("MM/dd/yyyy")
+  themeColor   String   @default("#EF3A2A") // Primary brand color
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model TaxSettings {
+  id           String   @id @default(cuid())
+  companyId    String   @unique
+  defaultTaxRate Float   @default(0)
+  taxMethod    String   @default("Inclusive") // Inclusive, Exclusive
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model EmailSettings {
+  id           String   @id @default(cuid())
+  companyId    String   @unique
+  provider     String   @default("resend") // resend, sendgrid
+  apiKey       String?  @db.Text
+  fromEmail    String
+  fromName     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  entity    String
+  entityId  String
+  changes   String?  @db.Text // JSON string
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Item Models
+model Item {
+  id            String   @id @default(cuid())
+  companyId     String
+  name          String
+  type          String   // product | service
+  sku           String?  @unique
+  unit          String
+  sellingPrice  Float
+  purchasePrice Float?
+  taxable       Boolean  @default(true)
+  taxRate       Float    @default(18)
+  hsnCode       String?
+  description   String?
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoiceItems  InvoiceItem[]
+  coupons       Coupon[]
+
+  @@index([companyId])
+}
+
+// Coupon Models
+model Coupon {
+  id               String    @id @default(cuid())
+  companyId        String
+  productId        String?
+  name             String
+  code             String
+  discountType     String    // "flat" | "percentage"
+  discountValue    Float
+  redemptionType   String    // "one-time" | "forever" | "limited"
+  associatePlans   String?   @db.Text // JSON list of plans
+  associateAddons  String?   @db.Text // JSON list of addons
+  expirationDate   DateTime?
+  maxRedemptions   Int?
+  totalRedemptions Int       @default(0)
+  status           String    @default("active")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  company          Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  item             Item?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([productId])
+}
+
+// Salesperson Models
+model Salesperson {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  email     String?
+  phone     String?
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invoices  Invoice[]
+
+  @@index([companyId])
+}
+
+// Subscription Models
+model Subscription {
+  id              String    @id @default(cuid())
+  companyId       String
+  customerId      String
+  subNumber       String
+  profileName     String
+  status          String    @default("Active") // Active, Paused, Cancelled, Expired
+  subFor          String    @default("items")  // items | product
+  billInterval    Int       @default(1)
+  billUnit        String    @default("Month(s)")
+  startDate       DateTime
+  neverExpires    Boolean   @default(true)
+  cycles          Int?
+  refNumber       String?
+  offlinePayment  Boolean   @default(false)
+  paymentTerms    String    @default("Due on Receipt")
+  notes           String?   @db.Text
+  metadata        String?   @db.Text  // JSON for plan/addon info
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer  Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items     SubscriptionItem[]
+
+  @@unique([companyId, subNumber])
+  @@index([companyId])
+  @@index([customerId])
+  @@index([status])
+}
+
+model SubscriptionItem {
+  id             String   @id @default(cuid())
+  subscriptionId String
+  itemId         String?
+  name           String
+  description    String?
+  quantity       Float
+  unitPrice      Float
+  createdAt      DateTime @default(now())
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([subscriptionId])
+}
+
+// Delivery Challan Models
+model DeliveryChallan {
+  id            String   @id @default(cuid())
+  companyId     String
+  customerId    String
+  challanNumber String
+  referenceNo   String?
+  challanDate   DateTime
+  challanType   String   @default("Supply of Liquid Gas") // Supply of Liquid Gas, Job Work, SKD/CKD, Others
+  status        String   @default("Draft") // Draft, Open, Closed, Cancelled
+  subTotal      Float    @default(0)
+  discount      Float    @default(0)
+  discountType  String   @default("percent")
+  adjustment    Float    @default(0)
+  total         Float    @default(0)
+  customerNotes String?  @db.Text
+  termsAndConditions String? @db.Text
+  convertedToInvoice Boolean @default(false)
+  invoiceId     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  company  Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items    ChallanItem[]
+
+  @@unique([companyId, challanNumber])
+  @@index([companyId])
+  @@index([customerId])
+  @@index([status])
+}
+
+model ChallanItem {
+  id         String   @id @default(cuid())
+  challanId  String
+  itemId     String?
+  name       String
+  description String?
+  quantity   Float
+  unitPrice  Float
+  amount     Float
+  createdAt  DateTime @default(now())
+
+  challan DeliveryChallan @relation(fields: [challanId], references: [id], onDelete: Cascade)
+
+  @@index([challanId])
+}
+
+// Credit Note Models
+model CreditNote {
+  id                String   @id @default(cuid())
+  companyId         String
+  customerId        String
+  creditNoteNumber  String
+  originalInvoiceRef String?
+  creditNoteDate    DateTime
+  reason            String?
+  status            String   @default("Draft") // Draft, Open, Closed, Void
+  subTotal          Float    @default(0)
+  discount          Float    @default(0)
+  discountType      String   @default("percent")
+  adjustment        Float    @default(0)
+  total             Float    @default(0)
+  customerNotes     String?  @db.Text
+  termsAndConditions String? @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  company  Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items    CreditNoteItem[]
+
+  @@unique([companyId, creditNoteNumber])
+  @@index([companyId])
+  @@index([customerId])
+  @@index([status])
+}
+
+model CreditNoteItem {
+  id           String   @id @default(cuid())
+  creditNoteId String
+  itemId       String?
+  name         String
+  description  String?
+  quantity     Float
+  unitPrice    Float
+  amount       Float
+  taxRate      Float    @default(0)
+  createdAt    DateTime @default(now())
+
+  creditNote CreditNote @relation(fields: [creditNoteId], references: [id], onDelete: Cascade)
+
+  @@index([creditNoteId])
+}
+
+// Quote (Estimate) Models
+model Quote {
+  id              String   @id @default(cuid())
+  companyId       String
+  customerId      String
+  quoteNumber     String
+  referenceNo     String?
+  quoteDate       DateTime
+  expiryDate      DateTime?
+  subject         String?
+  status          String   @default("Draft") // Draft, Sent, Accepted, Declined, Expired, Invoiced
+  subTotal        Float    @default(0)
+  discount        Float    @default(0)
+  discountType    String   @default("percent")
+  shippingCharges Float    @default(0)
+  adjustment      Float    @default(0)
+  total           Float    @default(0)
+  customerNotes   String?  @db.Text
+  termsAndConditions String? @db.Text
+  convertedToInvoice Boolean @default(false)
+  invoiceId       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  company  Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items    QuoteItem[]
+
+  @@unique([companyId, quoteNumber])
+  @@index([companyId])
+  @@index([customerId])
+  @@index([status])
+}
+
+model QuoteItem {
+  id          String   @id @default(cuid())
+  quoteId     String
+  itemId      String?
+  name        String
+  description String?
+  quantity    Float
+  unitPrice   Float
+  amount      Float
+  taxRate     Float    @default(0)
+  createdAt   DateTime @default(now())
+
+  quote Quote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@index([quoteId])
+}
+
+// Audit Event Log
+model Event {
+  id          String   @id @default(cuid())
+  companyId   String
+  userId      String?
+  eventId     String   @unique
+  eventType   String
+  eventSource String   @default("User")
+  entityType  String?
+  entityId    String?
+  entityName  String?
+  metadata    String?  @db.Text
+  occurredAt  DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([eventType])
+  @@index([occurredAt])
+}
+
+
+
+model InvoiceSettings {
+  id                 String   @id @default(cuid())
+  companyId          String   @unique
+  prefix             String   @default("INV-")
+  nextNumber         Int      @default(1)
+  defaultDueDays     Int      @default(30)
+  defaultNotes       String?  @db.Text
+  defaultTerms       String?  @db.Text
+  showSignLine       Boolean  @default(true)
+  showStatusStamp    Boolean  @default(true)
+  accentColor        String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model QuoteSettings {
+  id                 String   @id @default(cuid())
+  companyId          String   @unique
+  prefix             String   @default("QT-")
+  nextNumber         Int      @default(1)
+  defaultExpiryDays  Int      @default(15)
+  defaultNotes       String?  @db.Text
+  defaultTerms       String?  @db.Text
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model CompanySubscription {
+  id             String   @id @default(cuid())
+  companyId      String   @unique
+  planName       String   @default("Free Plan")
+  planId         String?
+  status         String   @default("Active")
+  billingCycle   String   @default("Monthly")
+  startDate      DateTime @default(now())
+  nextBillingDate DateTime?
+  amount         Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
